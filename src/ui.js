@@ -18,7 +18,14 @@ export const onOpen = () => {
     .createAddonMenu()
     .addItem('Open', 'showSidebar')
     .addSeparator()
-    .addItem('Video Tutorial', 'showVideo')
+    .addItem('Tutorial', 'showVideo')
+    .addToUi();
+
+  SpreadsheetApp.getUi()
+    .createMenu('👩🏻‍🎨 Spreadsheet Art')
+    .addItem('Open', 'showSidebar')
+    .addSeparator()
+    .addItem('Tutorial', 'showVideo')
     .addToUi();
 };
 

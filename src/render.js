@@ -10,7 +10,10 @@ const render = (data, mode) => {
       .getRange(1, 1, data.length, data[0].length)
       .setValues(data)
       .setHorizontalAlignment('center')
-      .setVerticalAlignment('center');
+      .setVerticalAlignment('center')
+      .setFontFamily('Roboto Mono')
+      .setFontSize(8);
+
     flushSheet();
     deleteEmptyCells();
     toast('Adjusting rows..');
@@ -59,8 +62,8 @@ const render = (data, mode) => {
     }
 
     flushSheet();
-    Utilities.sleep(2000);
-    toast('Done :)');
+    Utilities.sleep(1000);
+    toast('Artwork is ready!');
 
     return 'OK';
   } catch (f) {

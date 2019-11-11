@@ -1,6 +1,6 @@
 {
   "name": "pixel-art",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Pixel Art for Google Sheets",
   "author": {
     "name": "Amit Agarwal",
@@ -13,7 +13,8 @@
   "scripts": {
     "build": "webpack",
     "upload": "clasp push",
-    "deploy": "npm run build && npm run upload"
+    "deploy": "npm run build && npm run upload",
+    "deploy:prod": "cross-env NODE_ENV=production npm run deploy"
   },
   "repository": {
     "type": "git",
@@ -53,6 +54,7 @@
     "prettier": "^1.19.1",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.10"
+    "webpack-cli": "^3.3.10",
+    "cross-env": "^6.0.3"
   }
 }
