@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base target="_blank">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>Upload Image</title>
+    <style>
+        body {
+            padding: 20px
+        }
+    </style>
+</head>
+
+<body>
+    <h2>👩🏻‍🎨 Spreadsheet Art</h2>
+    <div class="block input">
+        <p>You can upload images that are in PNG, JPEG or GIF format.</p>
+        <p>Please select images less than 300x300 pixels in size for optimal performance.</p>
+    </div>
+    <div class="block input">
+        <input type="radio" name="radio-a" id="pixel" checked>
+        <label for="pixel">Pixel Art</label> &nbsp; <input type="radio" name="radio-a" id="emoji">
+        <label for="emoji">Emoji Art</label>
+    </div>
+    <div class="block input">
+        <button class="blue btnSelect">Select Image</button>
+    </div>
+    <p class="message" style="color: #228b22"></p>
+    <div class="block again" style="display:none">
+        <button class="btnAgain">Try again!</button>
+    </div>
+    <div class="block promo" style="display:none">
+        <p><img src="#" style="max-width:290px;width:100%" id="preview"></p>
+        <p><a href="https://labnol.org?p=12978">Click here</a> to know how it works!</p>
+        <hr />
+        <p>It may take a few minutes to generate your artwork. In the meantime, check our popular add-ons for Gmail and
+            Google Drive. </p>
+        <p>❶ <a
+                href="https://chrome.google.com/webstore/detail/mail-merge-with-attachmen/nifmcbjailaccmombpjjpijjbfoicppp">Mail
+                Merge</a> - Send personalized emails with Gmail and Google Inbox</p>
+        <p>❷ <a href="https://chrome.google.com/webstore/detail/document-studio/nhgeilcelhkmajkfgmgldbinmgjjajlb">Document
+                Studio</a> - Create personalized beautiful PDF documents in bulk</p>
+        <p>❸ <a
+                href="https://chrome.google.com/webstore/detail/save-emails-and-attachmen/nflmnfjphdbeagnilbihcodcophecebc">Save
+                Gmail</a> - Archive your Gmail email messages and attachments forever</p>
+    </div>
+    <span style="display:none">
+        <canvas></canvas>
+        <input id='upload' type='file' accept="image/*">
+    </span>
+    <script>
+        $(function () {
+            $("button.btnSelect").on("click", function () {
+                $("input#upload").click();
+            });
+            $("button.btnAgain").on("click", function () {
+                $("div.input").show();
+                $("div.promo").hide();
+                $("div.again").hide();
+                $("input#preview").attr("src", null);
+                showResult("");
+            });
+            pixels = {
+                image: "",
+                space: 0,
+                toHex: function (num) {
+                    var h = Math.round(num).toString(16);
+                    return h.length == 0 ? '00' : h.length == 1 ? '0' + h : h;
+                },
+                run: function () {
+                    var mode = $("#pixel").is(":checked") ? "pixel" : "emoji";
+                    var max = mode === "emoji" ? 120 : 240;
+                    var newSize = aspect(this.image.width, this.image.height, max, max);
+                    var canvas = $('<canvas>')[0];
+                    canvas.height = newSize.height;
+                    canvas.width = newSize.width;
+                    var context = canvas.getContext('2d');
+                    context.drawImage(this.image, 0, 0, newSize.width, newSize.height);
+                    var data, color, row, colors = [];
+                    for (var j = 0; j < newSize.height; j++) {
+                        row = [];
+                        for (var i = 0; i < newSize.width; i++) {
+                            data = context.getImageData(i, j, 1, 1).data;
+                            if (mode === "pixel") {
+                                color = "#" + this.toHex(data[0]) + '' + this.toHex(data[1]) + '' + this
+                                    .toHex(data[2]);
+                            } else {
+                                color = [data[0], data[1], data[2]].join(".")
+                            }
+                            row.push(color);
+                        }
+                        colors.push(row);
+                    }
+                    google.script.run.withSuccessHandler(showResult).render(colors, mode);
+                    return false;
+                }
+            };
+
+            function aspect(srcWidth, srcHeight, maxWidth, maxHeight) {
+                var ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);
+                return {
+                    width: srcWidth * ratio,
+                    height: srcHeight * ratio
+                };
+            }
+            $('#upload').change(function (e) {
+                var file = e.target.files[0];
+                $("div.input").hide();
+                $("div.promo").show();
+                showResult('<img src="https://i.imgur.com/b7BJ2nW.gif" /> Processing, please wait..');
+                var reader = new FileReader();
+                reader.onload = (function (theFile) {
+                    return function (e) {
+                        var image = new Image();
+                        image.src = e.target.result;
+                        $("img#preview").attr("src", e.target.result);
+                        image.onload = function () {
+                            pixels.image = this;
+                            pixels.run();
+                        };
+                    };
+                })(file);
+                reader.readAsDataURL(file);
+            });
+        });
+
+        function showResult(e) {
+            if (e === "OK") {
+                e = "🖼 Your artwork is ready. 🙌🏻🔥";
+                $("div.again").show();
+            }
+            $(".message").html(e);
+        }
+    </script>
+</body>
+
+</html>

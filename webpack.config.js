@@ -3,7 +3,6 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const GasPlugin = require('gas-webpack-plugin');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const { version } = require('./package.json');
 
 const src = path.resolve(__dirname, 'src');
 const destination = path.resolve(__dirname, 'dist');
@@ -14,7 +13,7 @@ module.exports = {
   context: __dirname,
   entry: `${src}/index.js`,
   output: {
-    filename: `code-${version}.js`,
+    filename: `code.js`,
     path: destination,
     libraryTarget: 'this'
   },
