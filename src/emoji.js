@@ -1,3 +1,6 @@
+// Credit: Monica Dinulescu
+// Emojillate https://github.com/notwaldorf/emojillate
+
 const emojiColorMap = [
   {
     color: [38, 38, 38],
