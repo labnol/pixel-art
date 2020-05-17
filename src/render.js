@@ -50,14 +50,12 @@ const render = (data, mode) => {
     flushSheet();
     toast('Almost there..');
 
-    sheet()
-      .getRange(1, 1, maxRow, maxCol)
-      .setFontSize(6);
+    sheet().getRange(1, 1, maxRow, maxCol).setFontSize(6);
 
     flushSheet();
     if (mode === 'pixel') {
       sheet().clear({
-        contentsOnly: true
+        contentsOnly: true,
       });
     }
 
