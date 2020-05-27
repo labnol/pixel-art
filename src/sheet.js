@@ -1,10 +1,12 @@
 import expBackoff from './backoff';
+import exception from './exception';
 
 export function ss() {
   if (typeof this.ss === 'undefined') {
     try {
       this.ss = expBackoff(() => SpreadsheetApp.getActiveSpreadsheet());
     } catch (f) {
+      exception(f);
       this.ss = null;
     }
   }
@@ -25,6 +27,7 @@ export const flushSheet = () => {
   try {
     SpreadsheetApp.flush();
   } catch (f) {
+    exception(f);
     // Do nothing
   }
 };
@@ -36,6 +39,7 @@ export function sheet() {
       ss().setActiveSheet(this.newsheet);
       flushSheet();
     } catch (f) {
+      exception(f);
       this.newsheet = null;
     }
   }
@@ -55,6 +59,6 @@ export const deleteEmptyCells = () => {
     sheet().deleteColumns(lastCol + 1, maxCols - lastCol);
     flushSheet();
   } catch (e) {
-    // do nothing
+    exception(e);
   }
 };

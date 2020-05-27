@@ -6,49 +6,86 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <title>Upload Image</title>
     <style>
         body {
-            padding: 20px
+            padding: 15px;
+            font-family: 'Roboto', sans-serif;
+            color: #555555;
+        }
+
+        .step {
+            color: #333;
+            font-size: 14px;
+            font-weight: 400;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            max-width: 80%px;
+        }
+
+        .hr {
+            padding-bottom: 10px
         }
     </style>
 </head>
 
 <body>
-    <div class="block input">
-        <p><img src="https://i.imgur.com/miEWamm.png" alt="Spreadsheet Art" style="max-width:290px;width:100%" /></p>
+    <div class="block hr">
+        <a href="https://www.labnol.org/software/turn-images-into-pixel-art/12978/" target="_blank"><img
+                src="https://i.imgur.com/miEWamm.png" alt="Spreadsheet Art" style="width:100%" /></a>
+
     </div>
-    <div class="block input">
-        <p>You can upload images that are in PNG, JPEG or GIF format.</p>
-        <p>Please select images less than 300x300 pixels in size for optimal performance.</p>
+    <div class="steps">
+        <div class="block hr">
+            <h3 class="step">️Step 1: Upload an Image</h3>
+            <p>You can upload PNG, JPEG or GIF images.</p>
+            <p id="1a">
+                <button class="btnSelect blue">Select Image</button>
+                <span id="fileName" style="color:blueviolet; margin-left:20px">↩</span>
+            </p>
+            <p id="1b" style="display: none; color: blueviolet;"><img src="https://i.imgur.com/b7BJ2nW.gif" /> Uploading
+                image, please wait..</p>
+        </div>
+        <div class="block hr">
+            <h3 class="step">Step 2: Choose Art Format</h3>
+            <p>Would you like to use solid colors or emojis?</p>
+            <p>
+                <input type="radio" name="radio-a" id="pixel" checked>
+                <label for="pixel"> 🎨 Colors</label> &nbsp;
+                <input type="radio" name="radio-a" id="emoji" style="margin-left:12px">
+                <label for="emoji"> 🥰 Emojis</label>
+            </p>
+        </div>
+        <div class="block hr">
+            <h3 class="step">Step 3: Draw with Pixels</h3>
+            <p>Click the Draw button to generate pixel art.</p>
+            <p><button disabled class="blue btnDraw">Draw It!</button>
+                <span style="margin-left: 20px;"> 👋🏻 <a
+                        href="https://www.labnol.org/software/turn-images-into-pixel-art/12978/" target="_blank">How it
+                        works? </a></span>
+            </p>
+        </div>
     </div>
-    <div class="block input">
-        <input type="radio" name="radio-a" id="pixel" checked>
-        <label for="pixel">Pixel Art 🎨</label> &nbsp; <input type="radio" name="radio-a" id="emoji">
-        <label for="emoji">Emoji Art 😀</label>
-    </div>
-    <div class="block input">
-        <button class="blue btnSelect">Select Image</button>
-    </div>
-    <p class="message" style="color: #228b22"></p>
-    <div class="block again" style="display:none">
-        <button class="btnAgain">Start Again!</button>
-    </div>
-    <div class="block promo" style="display:none">
-        <p><img src="#" style="max-width:290px;width:100%" id="preview"></p>
-        <p><a href="https://labnol.org?p=12978">Click here</a> to know how it works!</p>
-        <hr />
-        <p>It may take a few minutes to generate your artwork. In the meantime, check our popular add-ons for Gmail and
-            Google Drive. </p>
-        <p>❶ <a
-                href="https://chrome.google.com/webstore/detail/mail-merge-with-attachmen/nifmcbjailaccmombpjjpijjbfoicppp">Mail
-                Merge</a> - Send personalized emails with Gmail and Google Inbox</p>
-        <p>❷ <a href="https://chrome.google.com/webstore/detail/document-studio/nhgeilcelhkmajkfgmgldbinmgjjajlb">Document
-                Studio</a> - Create personalized beautiful PDF documents in bulk</p>
-        <p>❸ <a
-                href="https://chrome.google.com/webstore/detail/save-emails-and-attachmen/nflmnfjphdbeagnilbihcodcophecebc">Save
-                Gmail</a> - Archive your Gmail email messages and attachments forever</p>
+    <div class="draw" style="display: none;">
+        <div class="block hr">
+            <p><img src="#" style="max-width:200px" id="preview"></p>
+            <p class="message" style="color:blueviolet"></p>
+            <p class="block again" style="display:none"><button class="btnAgain blue">Start Again!</button></p>
+        </div>
+        <div class="block hr">
+            <h3 class="step">About Pixel Art</h3>
+            <p>Made by <a href="https://www.labnol.org/about" target="_blank" rel="noopener noreferrer">Amit
+                    Agarwal</a>, Google Developer Expert and creator of popular add-ons like <a
+                    title="Send Personalized Emails with Gmail"
+                    href="https://gsuite.google.com/marketplace/app/mail_merge_with_attachments/223404411203">Gmail Mail
+                    Merge</a> and <a title="Create Documents in Bulk with Google Drive"
+                    href="https://gsuite.google.com/marketplace/app/document_studio/429444628321">Document
+                    Studio</a>.</p>
+            <p style="font-size:12px;color: #888888;">Follow on <a href="https://twitter.com/labnol" target="_blank" rel="nofollow noopener noreferrer">Twitter</a> | <a href="https://www.youtube.com/user/labnol" target="_blank" rel="nofollow noopener noreferrer">YouTube</a> | <a href="https://www.labnol.org" target="_blank" rel="nofollow noopener noreferrer">Tech Blog</a></p>
+
+        </div>
     </div>
     <span style="display:none">
         <canvas></canvas>
@@ -59,11 +96,11 @@
             $("button.btnSelect").on("click", function () {
                 $("input#upload").click();
             });
+
             $("button.btnAgain").on("click", function () {
-                $("div.input").show();
-                $("div.promo").hide();
-                $("div.again").hide();
-                $("input#preview").attr("src", null);
+                $("div.steps").show();
+                $("div.draw").hide();
+                $("p.again").hide();
                 showResult("");
             });
             pixels = {
@@ -97,7 +134,9 @@
                         }
                         colors.push(row);
                     }
-                    google.script.run.withSuccessHandler(showResult).render(colors, mode);
+                    google.script.run.withFailureHandler(function() {
+                        showResult('Are you logged into multiple Google accounts in the same browser? It is recommended that you <a target="_blank" href="https://accounts.google.com/logout">log out</a> of all other Google accounts and try again.');
+                    }).withSuccessHandler(showResult).render("<?= userEmail; ?>",colors, mode);
                     return false;
                 }
             };
@@ -109,20 +148,34 @@
                     height: srcHeight * ratio
                 };
             }
+
+            $('.btnDraw').on("click", function () {
+                $("div.steps").hide();
+                $("div.draw").show();
+                $(".message").html('<img src="https://i.imgur.com/b7BJ2nW.gif" /> Working, please wait..');
+                pixels.run();
+            });
+
             $('#upload').change(function (e) {
                 var file = e.target.files[0];
-                $("div.input").hide();
-                $("div.promo").show();
-                showResult('<img src="https://i.imgur.com/b7BJ2nW.gif" /> Processing, please wait..');
+                $("#1a").hide();
+                $("#1b").show();
                 var reader = new FileReader();
                 reader.onload = (function (theFile) {
                     return function (e) {
                         var image = new Image();
                         image.src = e.target.result;
-                        $("img#preview").attr("src", e.target.result);
                         image.onload = function () {
                             pixels.image = this;
-                            pixels.run();
+                            setTimeout(function () {
+                                $("#1a").show();
+                                $(".btnSelect").text("Change Image")
+                                    .removeClass("blue");
+                                $("#1b").hide();
+                                $("img#preview").attr("src", e.target.result);
+                                $("#fileName").text(file.name);
+                                $(".btnDraw").attr("disabled", false)
+                            }, 3500);
                         };
                     };
                 })(file);
@@ -133,9 +186,10 @@
         function showResult(e) {
             if (e === "OK") {
                 e = "🖼 Your artwork is ready. 🙌🏻🔥";
-                $("div.again").show();
             }
             $(".message").html(e);
+            $("p.again").show();
+            $("img#preview").attr("src", null);
         }
     </script>
 </body>

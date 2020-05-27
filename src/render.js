@@ -1,8 +1,12 @@
 import { toast, sheet, flushSheet, deleteEmptyCells } from './sheet';
 import getClosestEmoji from './emoji';
+import exception from './exception';
+import { isMultipleAccountIssue } from './multiple';
 
-const render = (data, mode) => {
+const render = (email, data, mode) => {
   try {
+    const err = isMultipleAccountIssue(email);
+    if (err) return err;
     toast('Adding new sheet..');
     sheet();
     toast('Extracting Colors..');
@@ -13,7 +17,6 @@ const render = (data, mode) => {
       .setVerticalAlignment('center')
       .setFontFamily('Roboto Mono')
       .setFontSize(8);
-
     flushSheet();
     deleteEmptyCells();
     toast('Adjusting rows..');
@@ -35,7 +38,7 @@ const render = (data, mode) => {
         }
       }
       if (r && r % 10 === 0) {
-        toast(`Processing ${r}th row..`);
+        toast(`Processing ${r}th row of ${rl}`);
         flushSheet();
         Utilities.sleep(1000);
       }
@@ -65,7 +68,7 @@ const render = (data, mode) => {
 
     return 'OK';
   } catch (f) {
-    return f.toString();
+    return exception(f);
   }
 };
 

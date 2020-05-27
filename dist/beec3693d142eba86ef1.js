@@ -111,7 +111,7 @@ function render() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var _ui__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
-/* harmony import */ var _render__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
+/* harmony import */ var _render__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
 /*
 
 GOOGLE SPREADSHEET ART
@@ -168,9 +168,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "showVideo", function() { return showVideo; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onOpen", function() { return onOpen; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onInstall", function() { return onInstall; });
+/* harmony import */ var _user__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
+
 var showSidebar = function showSidebar() {
-  var html = HtmlService.createTemplateFromFile('canvas').evaluate();
-  html.setTitle('Spreadsheet Art');
+  var template = HtmlService.createTemplateFromFile('canvas');
+  template.userEmail = Object(_user__WEBPACK_IMPORTED_MODULE_0__["default"])();
+  var html = template.evaluate();
+  html.setTitle('Pixel Art for Google Sheets');
   SpreadsheetApp.getUi().showSidebar(html);
 };
 var showVideo = function showVideo() {
@@ -183,6 +187,7 @@ var onOpen = function onOpen() {
 };
 var onInstall = function onInstall() {
   onOpen();
+  console.info('💕', Object(_user__WEBPACK_IMPORTED_MODULE_0__["default"])());
 };
 
 /***/ }),
@@ -191,78 +196,23 @@ var onInstall = function onInstall() {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _sheet__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
-/* harmony import */ var _emoji__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
+/* harmony import */ var _multiple__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
 
+var emailAddress = null;
 
+var getUserEmail = function getUserEmail() {
+  if (emailAddress !== null) return emailAddress;
 
-var render = function render(data, mode) {
   try {
-    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["toast"])('Adding new sheet..');
-    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["sheet"])();
-    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["toast"])('Extracting Colors..');
-    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["sheet"])().getRange(1, 1, data.length, data[0].length).setValues(data).setHorizontalAlignment('center').setVerticalAlignment('center').setFontFamily('Roboto Mono').setFontSize(8);
-    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["flushSheet"])();
-    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["deleteEmptyCells"])();
-    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["toast"])('Adjusting rows..');
-    var maxRow = Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["sheet"])().getMaxRows();
-
-    for (var i = 1; i <= maxRow; i += 1) {
-      Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["sheet"])().setRowHeight(i, 12);
-    }
-
-    for (var r = 0, rl = data.length; r < rl; r += 1) {
-      for (var d = 0, dl = data[0].length; d < dl; d += 1) {
-        var range = Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["sheet"])().getRange(r + 1, d + 1);
-
-        if (mode === 'pixel') {
-          if (data[r][d] !== '#ffffff') {
-            range.setBackground(data[r][d]);
-          }
-        } else {
-          var _getClosestEmoji = Object(_emoji__WEBPACK_IMPORTED_MODULE_1__["default"])(data[r][d].split('.')),
-              emoji = _getClosestEmoji.emoji,
-              colors = _getClosestEmoji.colors;
-
-          range.setValue(emoji).setBackgroundRGB(colors[0], colors[1], colors[2]);
-        }
-      }
-
-      if (r && r % 10 === 0) {
-        Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["toast"])("Processing ".concat(r, "th row.."));
-        Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["flushSheet"])();
-        Utilities.sleep(1000);
-      }
-    }
-
-    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["toast"])('Adjusting columns..');
-    var maxCol = Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["sheet"])().getMaxColumns();
-
-    for (var c = 1; c <= maxCol; c += 1) {
-      Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["sheet"])().setColumnWidth(c, 12);
-    }
-
-    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["flushSheet"])();
-    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["toast"])('Almost there..');
-    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["sheet"])().getRange(1, 1, maxRow, maxCol).setFontSize(6);
-    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["flushSheet"])();
-
-    if (mode === 'pixel') {
-      Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["sheet"])().clear({
-        contentsOnly: true
-      });
-    }
-
-    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["flushSheet"])();
-    Utilities.sleep(1000);
-    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["toast"])('Artwork is ready!');
-    return 'OK';
+    emailAddress = Object(_multiple__WEBPACK_IMPORTED_MODULE_0__["getEffectiveUser"])() || Object(_multiple__WEBPACK_IMPORTED_MODULE_0__["getActiveUser"])() || '';
   } catch (f) {
-    return f.toString();
+    emailAddress = '';
   }
+
+  return emailAddress;
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (render);
+/* harmony default export */ __webpack_exports__["default"] = (getUserEmail);
 
 /***/ }),
 /* 4 */
@@ -270,71 +220,42 @@ var render = function render(data, mode) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ss", function() { return ss; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toast", function() { return toast; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "flushSheet", function() { return flushSheet; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sheet", function() { return sheet; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteEmptyCells", function() { return deleteEmptyCells; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getEffectiveUser", function() { return getEffectiveUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getActiveUser", function() { return getActiveUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isMultipleAccountIssue", function() { return isMultipleAccountIssue; });
 /* harmony import */ var _backoff__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
 
-function ss() {
-  if (typeof this.ss === 'undefined') {
-    try {
-      this.ss = Object(_backoff__WEBPACK_IMPORTED_MODULE_0__["default"])(function () {
-        return SpreadsheetApp.getActiveSpreadsheet();
-      });
-    } catch (f) {
-      this.ss = null;
-    }
-  }
 
-  return this.ss;
-}
-var toast = function toast() {
-  var e = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-
-  try {
-    if (e && ss()) {
-      ss().toast(e);
-    }
-  } catch (f) {// Do nothing
-  }
+var clean = function clean() {
+  var email = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  return email.toLowerCase().trim();
 };
-var flushSheet = function flushSheet() {
-  try {
-    SpreadsheetApp.flush();
-  } catch (f) {// Do nothing
-  }
+
+var getEffectiveUser = function getEffectiveUser() {
+  return Object(_backoff__WEBPACK_IMPORTED_MODULE_0__["default"])(function () {
+    return clean(Session.getEffectiveUser().getEmail());
+  });
 };
-function sheet() {
-  if (typeof this.newsheet === 'undefined') {
-    try {
-      this.newsheet = Object(_backoff__WEBPACK_IMPORTED_MODULE_0__["default"])(function () {
-        return ss().insertSheet();
-      });
-      ss().setActiveSheet(this.newsheet);
-      flushSheet();
-    } catch (f) {
-      this.newsheet = null;
+var getActiveUser = function getActiveUser() {
+  return Object(_backoff__WEBPACK_IMPORTED_MODULE_0__["default"])(function () {
+    return clean(Session.getActiveUser().getEmail());
+  });
+};
+var isMultipleAccountIssue = function isMultipleAccountIssue() {
+  var initiator = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+  try {
+    var currentUser = getEffectiveUser();
+
+    if (initiator && currentUser) {
+      if (initiator !== currentUser) {
+        return "Please <a target=\"_blank\" href=\"https://accounts.google.com/logout\">log out</a> " + "of your Google Account ".concat(currentUser, " to use Mail Merge with ").concat(initiator);
+      }
     }
+  } catch (f) {// do nothing
   }
 
-  return this.newsheet;
-}
-var deleteEmptyCells = function deleteEmptyCells() {
-  try {
-    toast('Deleting empty rows..');
-    var maxRows = sheet().getMaxRows();
-    var lastRow = sheet().getLastRow();
-    sheet().deleteRows(lastRow + 1, maxRows - lastRow);
-    flushSheet();
-    toast('Deleting empty columns..');
-    var maxCols = sheet().getMaxColumns();
-    var lastCol = sheet().getLastColumn();
-    sheet().deleteColumns(lastCol + 1, maxCols - lastCol);
-    flushSheet();
-  } catch (e) {// do nothing
-  }
+  return '';
 };
 
 /***/ }),
@@ -366,6 +287,195 @@ var expBackoff = function expBackoff(func) {
 
 /***/ }),
 /* 6 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _sheet__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(7);
+/* harmony import */ var _emoji__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(9);
+/* harmony import */ var _exception__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(8);
+/* harmony import */ var _multiple__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(4);
+
+
+
+
+
+var render = function render(email, data, mode) {
+  try {
+    var err = Object(_multiple__WEBPACK_IMPORTED_MODULE_3__["isMultipleAccountIssue"])(email);
+    if (err) return err;
+    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["toast"])('Adding new sheet..');
+    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["sheet"])();
+    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["toast"])('Extracting Colors..');
+    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["sheet"])().getRange(1, 1, data.length, data[0].length).setValues(data).setHorizontalAlignment('center').setVerticalAlignment('center').setFontFamily('Roboto Mono').setFontSize(8);
+    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["flushSheet"])();
+    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["deleteEmptyCells"])();
+    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["toast"])('Adjusting rows..');
+    var maxRow = Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["sheet"])().getMaxRows();
+
+    for (var i = 1; i <= maxRow; i += 1) {
+      Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["sheet"])().setRowHeight(i, 12);
+    }
+
+    for (var r = 0, rl = data.length; r < rl; r += 1) {
+      for (var d = 0, dl = data[0].length; d < dl; d += 1) {
+        var range = Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["sheet"])().getRange(r + 1, d + 1);
+
+        if (mode === 'pixel') {
+          if (data[r][d] !== '#ffffff') {
+            range.setBackground(data[r][d]);
+          }
+        } else {
+          var _getClosestEmoji = Object(_emoji__WEBPACK_IMPORTED_MODULE_1__["default"])(data[r][d].split('.')),
+              emoji = _getClosestEmoji.emoji,
+              colors = _getClosestEmoji.colors;
+
+          range.setValue(emoji).setBackgroundRGB(colors[0], colors[1], colors[2]);
+        }
+      }
+
+      if (r && r % 10 === 0) {
+        Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["toast"])("Processing ".concat(r, "th row of ").concat(rl));
+        Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["flushSheet"])();
+        Utilities.sleep(1000);
+      }
+    }
+
+    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["toast"])('Adjusting columns..');
+    var maxCol = Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["sheet"])().getMaxColumns();
+
+    for (var c = 1; c <= maxCol; c += 1) {
+      Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["sheet"])().setColumnWidth(c, 12);
+    }
+
+    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["flushSheet"])();
+    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["toast"])('Almost there..');
+    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["sheet"])().getRange(1, 1, maxRow, maxCol).setFontSize(6);
+    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["flushSheet"])();
+
+    if (mode === 'pixel') {
+      Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["sheet"])().clear({
+        contentsOnly: true
+      });
+    }
+
+    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["flushSheet"])();
+    Utilities.sleep(1000);
+    Object(_sheet__WEBPACK_IMPORTED_MODULE_0__["toast"])('Artwork is ready!');
+    return 'OK';
+  } catch (f) {
+    return Object(_exception__WEBPACK_IMPORTED_MODULE_2__["default"])(f);
+  }
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (render);
+
+/***/ }),
+/* 7 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ss", function() { return ss; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toast", function() { return toast; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "flushSheet", function() { return flushSheet; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sheet", function() { return sheet; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteEmptyCells", function() { return deleteEmptyCells; });
+/* harmony import */ var _backoff__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
+/* harmony import */ var _exception__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(8);
+
+
+function ss() {
+  if (typeof this.ss === 'undefined') {
+    try {
+      this.ss = Object(_backoff__WEBPACK_IMPORTED_MODULE_0__["default"])(function () {
+        return SpreadsheetApp.getActiveSpreadsheet();
+      });
+    } catch (f) {
+      Object(_exception__WEBPACK_IMPORTED_MODULE_1__["default"])(f);
+      this.ss = null;
+    }
+  }
+
+  return this.ss;
+}
+var toast = function toast() {
+  var e = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+  try {
+    if (e && ss()) {
+      ss().toast(e);
+    }
+  } catch (f) {// Do nothing
+  }
+};
+var flushSheet = function flushSheet() {
+  try {
+    SpreadsheetApp.flush();
+  } catch (f) {
+    Object(_exception__WEBPACK_IMPORTED_MODULE_1__["default"])(f); // Do nothing
+  }
+};
+function sheet() {
+  if (typeof this.newsheet === 'undefined') {
+    try {
+      this.newsheet = Object(_backoff__WEBPACK_IMPORTED_MODULE_0__["default"])(function () {
+        return ss().insertSheet();
+      });
+      ss().setActiveSheet(this.newsheet);
+      flushSheet();
+    } catch (f) {
+      Object(_exception__WEBPACK_IMPORTED_MODULE_1__["default"])(f);
+      this.newsheet = null;
+    }
+  }
+
+  return this.newsheet;
+}
+var deleteEmptyCells = function deleteEmptyCells() {
+  try {
+    toast('Deleting empty rows..');
+    var maxRows = sheet().getMaxRows();
+    var lastRow = sheet().getLastRow();
+    sheet().deleteRows(lastRow + 1, maxRows - lastRow);
+    flushSheet();
+    toast('Deleting empty columns..');
+    var maxCols = sheet().getMaxColumns();
+    var lastCol = sheet().getLastColumn();
+    sheet().deleteColumns(lastCol + 1, maxCols - lastCol);
+    flushSheet();
+  } catch (e) {
+    Object(_exception__WEBPACK_IMPORTED_MODULE_1__["default"])(e);
+  }
+};
+
+/***/ }),
+/* 8 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _user__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
+
+
+var exception = function exception() {
+  var e = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+  try {
+    var stack = e.stack,
+        _e$message = e.message,
+        message = _e$message === void 0 ? '' : _e$message;
+    console.error(Object(_user__WEBPACK_IMPORTED_MODULE_0__["default"])(), stack, message);
+    return "Error: ".concat(message);
+  } catch (ferr) {
+    return 'Something went wrong. Sorry!';
+  }
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (exception);
+
+/***/ }),
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

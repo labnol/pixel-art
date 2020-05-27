@@ -1,6 +1,10 @@
+import getUserEmail from './user';
+
 export const showSidebar = () => {
-  const html = HtmlService.createTemplateFromFile('canvas').evaluate();
-  html.setTitle('Spreadsheet Art');
+  const template = HtmlService.createTemplateFromFile('canvas');
+  template.userEmail = getUserEmail();
+  const html = template.evaluate();
+  html.setTitle('Pixel Art for Google Sheets');
   SpreadsheetApp.getUi().showSidebar(html);
 };
 
@@ -21,4 +25,5 @@ export const onOpen = () => {
 
 export const onInstall = () => {
   onOpen();
+  console.info('💕', getUserEmail());
 };
